@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <meta charset="utf-8">
+    <title>Add new Author to Book</title>
+    <style type = "text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+        table {
+            width:100%;
+        }
+        table, td, th {
+            border: 1px solid black;
+            padding:3px 2px;
+        }
+        section {
+            float: left;
+            margin: 0 1.5%;
+            width: 63%;
+        }
+        aside {
+            float: right;
+            margin: 0 1.5%;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Select the Author to add to the Book </h1>
+</header>
+<section>
+    <h2>Select author:</h2>
+    <!-- Make changes to this code to dynamically display radio buttons for each author as in the example -->
+
+    <th:block th:each="author: ${authors}">
+        <a th:href="@{'/author/edit-author-form/{id}' (id=${author.getId()})}">
+            <button th:class="form-container">Edit Author</button>
+        </a>
+        <form  th:action="@{'/author/delete-author/{id}' (id=${author.getId()})}"
+               th:method="POST">
+            <button type="submit">
+                Delete
+            </button>
+        </form>
+        <form th:method="POST" th:action="@{/author}">
+    <input type="radio" name="authorId" th:value="${author.getId()}" th:id="${author.getId()}"/>
+    <label th:for="'author' + ${author.getId()}" th:text="${author.getAuthorFullname().getName()}+' '+${author.getAuthorFullname().getSurname()}"></label><br/>
+            <input type='submit' value='Add author'>
+        </form>
+    </th:block>
+
+
+    <a href="author/add-author-form">
+        <button th:class="form-container">Add New Author</button>
+    </a>
+</section>
+<aside>
+    <table>
+        <tr>
+            <!-- change to show selected book isbn -->
+            <td><b>Book Isbn</b></td>
+            <td th:text="${isbn}"></td>
+        </tr>
+    </table>
+</aside>
+</body>
+</html>

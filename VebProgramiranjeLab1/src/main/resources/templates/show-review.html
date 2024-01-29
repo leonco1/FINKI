@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Reviews</title>
+</head>
+<body>
+
+<h1>Book Reviews</h1>
+
+
+<h2 th:if="${book}" th:text="${book.getTitle()}"></h2>
+<h3>Search</h3>
+<form th:action="@{/review/search}" th:method="GET">
+  <input type="datetime-local" name="from">
+  <input type="datetime-local" name="to">
+  <input type="submit" value="Search">
+  <!--      <input type="hidden" name="book" th:value="${book}">-->
+</form>
+<div th:if="${book}">
+  <p th:if="${book.getReviews().size() == 0}">No reviews yet.</p>
+</div>
+<div th:if="${book}">
+  <div th:each="review : ${book.getReviews()}">
+    <div>
+      <strong>Score:</strong> <span th:text="${review.getScore()}"></span>
+    </div>
+    <div>
+      <strong>Description:</strong> <span th:text="${review.getDescription()}"></span>
+    </div>
+    <p th:text="${#temporals.format(review.getTimestamp(), 'dd-MM-yyyy HH:mm:ss')}"></p>
+    <hr>
+  </div>
+</div>
+<div th:if="${search}">
+  <div th:each="review : ${searchReviews}">
+    <div>
+      <strong>Score:</strong> <span th:text="${review.getScore()}"></span>
+    </div>
+    <div>
+      <strong>Description:</strong> <span th:text="${review.getDescription()}"></span>
+    </div>
+    <p th:text="${#temporals.format(review.getTimestamp(), 'dd-MM-yyyy HH:mm:ss')}"></p>
+    <hr>
+  </div>
+</div>
+
+
+</body>
+</html>
