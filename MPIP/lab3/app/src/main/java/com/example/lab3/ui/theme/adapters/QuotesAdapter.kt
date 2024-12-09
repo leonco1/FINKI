@@ -1,4 +1,4 @@
-package com.example.lab3.adapters
+package com.example.lab3.ui.theme.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import com.example.lab3.R
 import com.example.lab3.data.Quote
 import com.example.lab3.data.Quotes
 
-class QuotesAdapter(private val quotes: Quotes,private val onClick: (Quote) -> Unit): RecyclerView.Adapter<QuotesAdapter.QuotesViewHolder>() {
+class QuotesAdapter(private val quotes: Quotes,private val onClick:  (Quote) -> Unit): RecyclerView.Adapter<QuotesAdapter.QuotesViewHolder>() {
 
     class QuotesViewHolder(quoteView: View,val onClick:(Quote)->Unit):RecyclerView.ViewHolder(quoteView)
     {
@@ -47,11 +47,11 @@ class QuotesAdapter(private val quotes: Quotes,private val onClick: (Quote) -> U
     }
 
     override fun getItemCount(): Int {
-        return quotes.quoteList.size
+        return quotes.quotes.size
     }
 
     override fun onBindViewHolder(holder: QuotesViewHolder, position: Int) {
-        val quote= quotes.quoteList[position]
+        val quote= quotes.quotes[position]
 
         holder.bind(quote)
 

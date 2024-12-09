@@ -1,4 +1,6 @@
 package com.example.lab3.data
 
-data class Quotes(val quoteList:List<Quote>)
+import java.io.Serializable
+
+data class Quotes(val quotes:List<Quote>) : Serializable
 
