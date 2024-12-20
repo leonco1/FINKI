@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lab4.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -20,14 +21,26 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //TODO 3: here initialize the database, participantDao and adapter
+         adapter=ParticipantAdapter(participants){
+            participant->deleteParticipant(participant)
+        }
+        database=ParticipantDatabase.getDatabase(this)
+        participantDao=database.participantDao()
 
-        //TODO 6: here set the RecyclerView's layout manager and adapter
+
+        binding.recyclerView.layoutManager=LinearLayoutManager(this)
+        binding.recyclerView.adapter=adapter
+
 
 
         binding.addButton.setOnClickListener {
             val name = binding.editText.text.toString()
-            //TODO 7: add a participant if the name is not empty
+            if (name.isNotEmpty())
+            {
+                val newParticipant:Participant=Participant(name=name)
+                addParticipant(newParticipant)
+                binding.editText.text.clear()
+            }
         }
 
         binding.assignButton.setOnClickListener { assignSecretSantas() }
@@ -44,19 +57,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addParticipant(participant: Participant) {
-    //TODO 9: add a participant to the database asynchronously using Kotlin Coroutines -
-    // use the coroutine dispatcher for input/output operations and
-    // make sure to call fetchParticipants() after adding the participant
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            participantDao.insertParticipant(participant)
+            fetchParticipants()
+        }
     }
 
     private fun deleteParticipant(participant: Participant) {
-    //TODO 10: delete a participant from the database asynchronously using Kotlin Coroutines -
-    // use the coroutine dispatcher for input/output operations and
-    // make sure to call fetchParticipants() after removing the participant
+        CoroutineScope(Dispatchers.IO).launch {
+            participantDao.deleteParticipant(participant)
+            fetchParticipants()
+        }
     }
 
     private fun assignSecretSantas() {
-        //TODO 11: Check if there are at least 2 participants
+     if(participants.size<2)
+     {
+         AlertDialog.Builder(this).setTitle("NotEnoughParticipantsError").setMessage("At least 2 participants are required")
+             .setPositiveButton("Ok",null).show()
+         return
+     }
 
         val shuffledList = participants.shuffled()
         val assignments = shuffledList.zipWithNext() + Pair(shuffledList.last(), shuffledList.first())

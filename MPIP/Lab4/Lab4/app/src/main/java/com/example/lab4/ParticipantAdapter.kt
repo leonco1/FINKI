@@ -18,6 +18,10 @@ class ParticipantAdapter(
         fun bind(participant: Participant) {
         participantName.text=participant.name
 
+            deleteButton.setOnClickListener{
+                onDeleteClick(participant)
+            }
+
         }
     }
 
